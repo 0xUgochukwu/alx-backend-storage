@@ -1,0 +1,5 @@
+// Deletes documents from a collection by match
+db.school.delete(
+  { name: "Holberton school" },
+  { multi: "true" }
+)
