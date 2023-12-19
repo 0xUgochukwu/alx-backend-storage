@@ -1,0 +1,2 @@
+// Count Documents
+db.school.count()
