@@ -25,7 +25,7 @@ def track_requests(method: Callable) -> Callable:
         if cached_res:
             return cached_res.decode('utf-8')
         res = method(url)
-        cache.set(f'cached:{url}', res, 10)
+        cache.set(f'cached:{url}', res, ex=10)
         return res
     return wrapper
 
