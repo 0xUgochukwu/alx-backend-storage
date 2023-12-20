@@ -19,14 +19,14 @@ def track_requests(method: Callable) -> Callable:
         '''
             The wrapper function.
         '''
-        client = redis.Redis()
-        client.incr(f'count:{url}')
-        cached_page = client.get(f'{url}')
-        if cached_page:
-            return cached_page.decode('utf-8')
-        response = method(url)
-        client.set(f'{url}', response, 10)
-        return response
+        cache = redis.Redis()
+        cache.incr(f'count:{url}')
+        cached_res = cache.get(f'cached:{url}')
+        if cached_res:
+            return cached_res.decode('utf-8')
+        res = method(url)
+        cache.set(f'cached:{url}', res, 10)
+        return res
     return wrapper
 
 
@@ -35,4 +35,6 @@ def get_page(url: str) -> str:
     '''
         Gets a page content.
     '''
-    return requests.get(url).text
+    response = requests.get(url)
+    return response.text
+    # return requests.get(url).text
