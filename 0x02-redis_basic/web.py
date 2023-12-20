@@ -8,20 +8,18 @@ import requests
 from functools import wraps
 
 
-cache = redis.Redis()
-
-
-def count_requests(method: Callable) -> Callable:
+def track_requests(method: Callable) -> Callable:
     '''
         Decorator that counts the number of requests to a url
         and caches the responses for 10 seconds.
     '''
 
     @wraps(method)
-    def wrapper(url):
+    def wrapper(url: str) -> str:
         '''
             The wrapper function.
         '''
+        cache = redis.Redis()
         cache.incr(f'count:{url}')
         cached_res = cache.get(f'cached:{url}')
         if cached_res:
@@ -32,7 +30,7 @@ def count_requests(method: Callable) -> Callable:
     return wrapper
 
 
-@count_requests
+@track_requests
 def get_page(url: str) -> str:
     '''
         Gets a page content.
