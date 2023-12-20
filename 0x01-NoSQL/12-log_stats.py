@@ -11,7 +11,7 @@ if __name__ == '__main__':
     '''
     collection = MongoClient('mongodb://127.0.0.1:27017').logs.nginx
 
-    print(f'{collection.count_documents()} logs')
+    print(f'{collection.count_documents({})} logs')
     print('Methods:')
 
     for method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
@@ -21,5 +21,4 @@ if __name__ == '__main__':
     status_check_count = collection.count_documents(
             {"method": "GET", "path": "/status"}
     )
-
     print(f'{status_check_count} status check')
