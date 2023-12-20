@@ -23,3 +23,26 @@ if __name__ == '__main__':
         {"method": "GET", "path": "/status"}
     )
     print(f'{status_check_count} status check')
+
+    top_ips = nginx_collection.aggregate([
+        {
+            '$group': {
+                '_id': '$ip',
+                'n_reqs': {'$sum': 1}
+            }
+        },
+        {'$sort': {'n_reqs': -1}},
+        {'$limit': 10},
+        {
+            '$project': {
+                '_id': 0,
+                'ip': '$_id',
+                'n_reqs': 1
+            }
+        }
+        
+    ])
+    print('IPs:')
+    for ip in top_ips:
+        print(f'\t{ip.get("ip")}: {ip.get("n_reqs")}')
+
